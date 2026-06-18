@@ -52,3 +52,14 @@ opide-shell = { path = "../crates/opide-shell" }
 
 # OPIDE AI — AST indexer, WASM skills, tool executor, diff editor
 opide-ai = { path = "../crates/opide-ai" }
+
+# Profile de desenvolvimento otimizado para compilação rápida — Performance Refactor v2.0
+[profile.dev]
+opt-level = 1  # Reduz de 30-60s para 5-10s em compilações incrementais
+debug = true
+split-debuginfo = "unpacked"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+strip = true

@@ -77,7 +77,20 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # binary-ipc/plan-executor/swarm/channels/dex/browser/docker features
 # along with their backing modules. Only `engine-fork-mode` survives.
 [features]
-default = []
+default = ["full"]
+full = ["engram", "mcp", "vault", "dream"]
+lite = []  # Sem: engram, mcp, vault, dream, ast-index pesado
+
+# Feature flags para Performance Refactor v2.0
+engram = ["rusqlite", "chrono", "chrono-tz", "regex"]
+mcp = ["tokio-rustls", "rustls", "webpki-roots"]
+vault = ["aes-gcm", "zeroize"]
+dream = ["engram"]
+ast-index = ["tree-sitter", "tree-sitter-typescript", "tree-sitter-python",
+             "tree-sitter-rust", "tree-sitter-go", "tree-sitter-java",
+             "tree-sitter-cpp", "tree-sitter-c", "tree-sitter-ruby",
+             "tree-sitter-css", "tree-sitter-json", "tree-sitter-solidity"]
+
 # B138: engine forks can opt out of the `src-tauri/src/engine` block in
 # the filesystem tool's sensitive-path list. Default builds keep the
 # block on so the engine itself can't be self-edited from inside an

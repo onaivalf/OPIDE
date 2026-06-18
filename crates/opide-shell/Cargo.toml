@@ -43,3 +43,12 @@ base64 = "0.22"
 # Extension installer (B63/B64) — replaces curl/unzip shell pipelines.
 zip = "2"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+
+# Feature flags para Performance Refactor v2.0
+[features]
+default = ["full"]
+full = ["git", "lsp", "dap"]
+lite = []  # Sem git pesado, LSP/DAP completos
+git = ["git2"]
+lsp = []
+dap = []

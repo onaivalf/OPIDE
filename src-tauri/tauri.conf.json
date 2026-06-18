@@ -52,7 +52,7 @@
       "endpoints": [
         "https://releases.openpawz.com/opide/{{target}}/{{arch}}/{{current_version}}"
       ],
-      "pubkey": "PLACEHOLDER_GENERATE_WITH_TAURI_SIGNER"
+      "pubkey": ""
     }
   }
 }

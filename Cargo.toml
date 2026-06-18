@@ -9,6 +9,12 @@ members = [
     "crates/opide-engine",
 ]
 
+# Workspace metadata for feature flags — OPIDE Performance Refactor v2.0
+[workspace.metadata.features]
+default = ["full"]
+lite = ["opide-engine/lite", "opide-ai/lite", "opide-shell/lite"]
+full = ["engram", "mcp", "vault", "dream", "ast-index"]
+
 # Shared dependency versions — members use `dep.workspace = true`
 [workspace.dependencies]
 serde = { version = "1.0", features = ["derive"] }

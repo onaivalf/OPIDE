@@ -48,3 +48,15 @@ ignore = "0.4"
 grep-regex = "0.1"
 grep-searcher = "0.1"
 grep-matcher = "0.1"
+
+# Feature flags para Performance Refactor v2.0
+[features]
+default = ["full"]
+full = ["ast-index", "embeddings"]
+lite = []  # Sem AST indexing pesado, sem embeddings
+ast-index = ["tree-sitter", "tree-sitter-typescript", "tree-sitter-javascript",
+             "tree-sitter-rust", "tree-sitter-python", "tree-sitter-css",
+             "tree-sitter-json", "tree-sitter-go", "tree-sitter-c",
+             "tree-sitter-cpp", "tree-sitter-java", "tree-sitter-ruby",
+             "solang-parser"]
+embeddings = []
