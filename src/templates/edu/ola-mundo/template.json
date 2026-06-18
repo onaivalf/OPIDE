@@ -1,0 +1,55 @@
+{
+  "id": "ola-mundo",
+  "name": "Olá Mundo",
+  "language": "python",
+  "difficulty": "beginner",
+  "description": "Seu primeiro programa em Python - imprima uma mensagem de boas-vindas",
+  "icon": "🐍",
+  "files": [
+    {
+      "path": "main.py",
+      "content": "# Olá Mundo em Python!\n# Este é seu primeiro programa.\n# Execute para ver a mágica acontecer!\n\nprint(\"Olá, Mundo!\")\n\n# Tente mudar a mensagem abaixo:\nprint(\"Bem-vindo à programação!\")\n\n# Desafio: Crie uma variável com seu nome e imprima\n# seu_nome = \"Maria\"\n# print(f\"Olá, {seu_nome}!\")\n",
+      "description": "Arquivo principal do projeto"
+    },
+    {
+      "path": "README.md",
+      "content": "# 🐍 Olá Mundo - Python\n\nParabéns! Você está começando sua jornada na programação.\n\n## O que este programa faz?\n\nEste código imprime duas mensagens na tela:\n1. \"Olá, Mundo!\" - a tradição de todo programador\n2. \"Bem-vindo à programação!\"\n\n## Como executar?\n\n1. Clique no botão ▶️ **Rodar** na barra de ações\n2. Veja o resultado no terminal abaixo do editor\n\n## Seu Primeiro Desafio 🎯\n\nNo final do arquivo `main.py`, há um código comentado:\n\n```python\n# seu_nome = \"Maria\"\n# print(f\"Olá, {seu_nome}!\")\n```\n\n**Tarefa:**\n1. Remova os `#` do início das linhas (isso se chama \"descomentar\")\n2. Mude \"Maria\" para o SEU nome\n3. Execute o código novamente\n\n## O que são comentários?\n\nLinhas que começam com `#` são **comentários** - elas não são executadas pelo Python.\nUsamos comentários para:\n- Explicar o código\n- Deixar lembretes\n- Desativar temporariamente partes do código\n\n## Próximos Passos\n\nDepois de completar este desafio, tente:\n- ✅ Imprimir seu nome completo\n- ✅ Imprimir sua idade\n- ✅ Criar uma mensagem de boas-vindas criativa\n\nBoa codificação! 🚀\n",
+      "description": "Guia do projeto"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Primeira Execução",
+      "instruction": "Execute o código e veja as mensagens aparecerem no terminal",
+      "hint": "Clique no botão ▶️ Rodar na barra superior",
+      "test": {
+        "type": "output_contains",
+        "expected": ["Olá, Mundo!", "Bem-vindo à programação!"]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Personalize a Mensagem",
+      "instruction": "Descomente as últimas linhas e substitua pelo seu nome",
+      "hint": "Remova o # do início da linha e troque 'Maria' pelo seu nome",
+      "test": {
+        "type": "output_contains",
+        "expected": ["Olá"]
+      }
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "basic",
+    "autoRun": false
+  },
+  "learningObjectives": [
+    "Entender o comando print()",
+    "Aprender sobre comentários (#)",
+    "Introdução a variáveis",
+    "Primeira execução de código"
+  ]
+}

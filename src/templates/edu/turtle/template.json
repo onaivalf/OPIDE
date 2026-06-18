@@ -1,0 +1,66 @@
+{
+  "id": "turtle",
+  "name": "Turtle Graphics",
+  "language": "python",
+  "difficulty": "beginner",
+  "description": "Desenhe formas geométricas usando código Python com a biblioteca turtle",
+  "icon": "🐢",
+  "files": [
+    {
+      "path": "desenho.py",
+      "content": "# 🐢 Turtle Graphics - Desenhando com Código!\n# A biblioteca turtle permite criar desenhos programaticamente\n\nfrom turtle import Turtle, Screen\n\n# Cria uma tartaruga (o \"cursor\" que desenha)\ntartaruga = Turtle()\ntartaruga.shape(\"turtle\")\ntartaruga.color(\"green\")\ntartaruga.speed(2)  # Velocidade: 1 (lento) a 10 (rápido)\n\n# Cria a tela onde o desenho aparece\ntela = Screen()\ntela.bgcolor(\"white\")\ntela.title(\"Meu Primeiro Desenho com Turtle\")\n\n# TODO: Complete os comandos abaixo para desenhar um quadrado!\n\n# 1. Mova a tartaruga para frente 100 passos\n# tartaruga.forward(100)\n\n# 2. Gire a tartaruga 90 graus para direita\n# tartaruga.right(90)\n\n# Repita os passos 1 e 2 mais 3 vezes para completar o quadrado\n# Dica: você pode usar um loop for!\n\n# Exemplo de loop:\nfor i in range(4):\n    tartaruga.forward(100)  # Mova para frente\n    tartaruga.right(90)     # Gire 90 graus\n\n# Desafio: Mude a cor da tartaruga para \"blue\"\n# Desafio: Tente desenhar um triângulo (3 lados, ângulo de 120 graus)\n\n# Mantém a janela aberta até clicar\ntela.exitonclick()\n",
+      "description": "Código principal do Turtle Graphics"
+    },
+    {
+      "path": "README.md",
+      "content": "# 🐢 Turtle Graphics - Desenhando com Python\n\nBem-vindo ao mundo dos gráficos com Python!\n\n## O que é Turtle?\n\nTurtle é uma biblioteca do Python que permite criar desenhos usando código.\nImagine uma tartaruga que segura um lápis e desenha na tela conforme você dá comandos!\n\n## Comandos Principais\n\n| Comando | O que faz |\n|---------|-----------|\n| `forward(passos)` | Move a tartaruga para frente |\n| `backward(passos)` | Move a tartaruga para trás |\n| `right(graus)` | Gira para direita |\n| `left(graus)` | Gira para esquerda |\n| `color(\"cor\")` | Muda a cor do lápis |\n| `speed(numero)` | Muda a velocidade (1-10) |\n\n## Como Executar?\n\n1. Pressione ▶️ **Rodar** no OPIDE\n2. Uma janela se abrirá com seu desenho!\n3. Clique na janela para fechar\n\n## Seu Primeiro Desenho: Quadrado 🎯\n\nNo arquivo `desenho.py`, complete o código para desenhar um quadrado:\n\n```python\nfor i in range(4):\n    tartaruga.forward(100)  # Anda 100 passos\n    tartaruga.right(90)     # Gira 90 graus\n```\n\n## Desafios 🌟\n\n### Nível 1: Mudar Cores\n- Mude a cor da tartaruga para azul: `tartaruga.color(\"blue\")`\n- Mude a cor de fundo: `tela.bgcolor(\"lightblue\")`\n\n### Nível 2: Triângulo\nDesenhe um triângulo equilátero:\n```python\nfor i in range(3):\n    tartaruga.forward(100)\n    tartaruga.left(120)  # Ângulo diferente!\n```\n\n### Nível 3: Pentágono\nDesenhe um pentágono (5 lados):\n```python\nfor i in range(5):\n    tartaruga.forward(80)\n    tartaruga.right(72)  # 360 / 5 = 72\n```\n\n### Nível 4: Espiral Criativa\nCrie uma espiral colorida:\n```python\ncores = [\"red\", \"blue\", \"green\", \"yellow\", \"purple\"]\nfor i in range(36):\n    tartaruga.color(cores[i % 5])\n    tartaruga.forward(i * 3)\n    tartaruga.right(45)\n```\n\n## Conceitos Aprendidos\n\n- ✅ Loops (repetição)\n- ✅ Coordenadas e ângulos\n- ✅ Sequenciamento de comandos\n- ✅ Pensamento geométrico\n\nDivirta-se desenhando! 🎨\n",
+      "description": "Guia completo do projeto Turtle"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Primeiro Quadrado",
+      "instruction": "Complete o loop for para desenhar um quadrado",
+      "hint": "Use range(4) e gire 90 graus a cada lado",
+      "test": {
+        "type": "code_contains",
+        "expected": ["for i in range(4)", "forward", "right(90)"]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Mudar Cor",
+      "instruction": "Altere a cor da tartaruga para 'blue'",
+      "hint": "Use tartaruga.color(\"blue\")",
+      "test": {
+        "type": "code_contains",
+        "expected": "color(\"blue\")"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Desenhar Triângulo",
+      "instruction": "Crie um novo código para desenhar um triângulo",
+      "hint": "3 lados, ângulo de 120 graus",
+      "test": {
+        "type": "code_contains",
+        "expected": ["range(3)", "120"]
+      }
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "basic",
+    "requiresGraphics": true
+  },
+  "learningObjectives": [
+    "Entender loops em Python",
+    "Aprender coordenadas básicas",
+    "Praticar sequenciamento lógico",
+    "Introdução a gráficos computacionais",
+    "Geometria aplicada à programação"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "calculadora",
+  "name": "Calculadora",
+  "language": "javascript",
+  "difficulty": "beginner",
+  "description": "Crie uma calculadora interativa que soma dois números",
+  "icon": "🧮",
+  "files": [
+    {
+      "path": "index.html",
+      "content": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Calculadora</title>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            max-width: 400px;\n            margin: 50px auto;\n            padding: 20px;\n            background: #f5f5f5;\n        }\n        .calculadora {\n            background: white;\n            padding: 30px;\n            border-radius: 10px;\n            box-shadow: 0 4px 6px rgba(0,0,0,0.1);\n        }\n        h1 {\n            text-align: center;\n            color: #333;\n        }\n        input {\n            width: 100%;\n            padding: 12px;\n            margin: 10px 0;\n            border: 2px solid #ddd;\n            border-radius: 5px;\n            font-size: 16px;\n            box-sizing: border-box;\n        }\n        button {\n            width: 100%;\n            padding: 15px;\n            background: #4CAF50;\n            color: white;\n            border: none;\n            border-radius: 5px;\n            font-size: 18px;\n            cursor: pointer;\n            margin-top: 10px;\n        }\n        button:hover {\n            background: #45a049;\n        }\n        #resultado {\n            margin-top: 20px;\n            padding: 15px;\n            background: #e8f5e9;\n            border-radius: 5px;\n            text-align: center;\n            font-size: 24px;\n            font-weight: bold;\n            color: #2e7d32;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"calculadora\">\n        <h1>🧮 Calculadora</h1>\n        \n        <label for=\"numero1\">Primeiro número:</label>\n        <input type=\"number\" id=\"numero1\" placeholder=\"Digite um número\">\n        \n        <label for=\"numero2\">Segundo número:</label>\n        <input type=\"number\" id=\"numero2\" placeholder=\"Digite outro número\">\n        \n        <button onclick=\"somar()\">Somar</button>\n        \n        <div id=\"resultado\"></div>\n    </div>\n\n    <script src=\"app.js\"></script>\n</body>\n</html>\n",
+      "description": "Interface HTML da calculadora"
+    },
+    {
+      "path": "app.js",
+      "content": "// Função que soma dois números\nfunction somar() {\n    // TODO: Complete esta função!\n    \n    // 1. Obtenha o valor do primeiro input (id: \"numero1\")\n    // Dica: use document.getElementById(\"numero1\").value\n    \n    // 2. Obtenha o valor do segundo input (id: \"numero2\")\n    \n    // 3. Converta os valores para números usando Number()\n    \n    // 4. Some os dois números\n    \n    // 5. Mostre o resultado na div com id \"resultado\"\n    // Dica: document.getElementById(\"resultado\").textContent = ...;\n    \n    console.log(\"Função somar chamada!\");\n}\n\n// Exemplo de como obter valores:\n// var valor = document.getElementById(\"numero1\").value;\n// var numero = Number(valor);\n",
+      "description": "Lógica JavaScript da calculadora"
+    },
+    {
+      "path": "README.md",
+      "content": "# 🧮 Calculadora JavaScript\n\nBem-vindo ao seu primeiro projeto JavaScript!\n\n## O que vamos construir?\n\nUma calculadora web que soma dois números digitados pelo usuário.\n\n## Estrutura do Projeto\n\n- `index.html` - A interface visual da calculadora\n- `app.js` - O código JavaScript que faz a mágica acontecer\n\n## Como testar?\n\n1. Abra o arquivo `index.html` no navegador (pressione F5)\n2. Digite dois números nos campos\n3. Clique em \"Somar\"\n4. Veja o resultado aparecer!\n\n## Seu Desafio 🎯\n\nNo arquivo `app.js`, complete a função `somar()` seguindo os passos nos comentários:\n\n```javascript\nfunction somar() {\n    // 1. Obtenha o valor do primeiro input\n    var num1 = document.getElementById(\"numero1\").value;\n    \n    // 2. Obtenha o valor do segundo input\n    var num2 = document.getElementById(\"numero2\").value;\n    \n    // 3. Converta para números\n    var numero1 = Number(num1);\n    var numero2 = Number(num2);\n    \n    // 4. Some\n    var resultado = numero1 + numero2;\n    \n    // 5. Mostre na tela\n    document.getElementById(\"resultado\").textContent = resultado;\n}\n```\n\n## Conceitos Aprendidos\n\n- ✅ Funções em JavaScript\n- ✅ DOM (Document Object Model)\n- ✅ Obtendo elementos por ID\n- ✅ Convertendo strings para números\n- ✅ Manipulando texto na página\n\n## Experimente Mais!\n\nDepois de completar:\n- 🌟 Adicione subtração\n- 🌟 Adicione multiplicação\n- 🌟 Valide se os campos estão vazios\n- 🌟 Mude as cores da calculadora\n\nBoa programação! 🚀\n",
+      "description": "Guia do projeto"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Obter Primeiro Número",
+      "instruction": "Complete a linha que obtém o valor do primeiro input",
+      "hint": "Use document.getElementById(\"numero1\").value",
+      "test": {
+        "type": "code_contains",
+        "expected": "document.getElementById(\"numero1\").value"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Obter Segundo Número",
+      "instruction": "Complete a linha que obtém o valor do segundo input",
+      "hint": "Similar ao primeiro, mas com \"numero2\"",
+      "test": {
+        "type": "code_contains",
+        "expected": "document.getElementById(\"numero2\").value"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Mostrar Resultado",
+      "instruction": "Faça o resultado aparecer na div com id 'resultado'",
+      "hint": "Use document.getElementById(\"resultado\").textContent = ...",
+      "test": {
+        "type": "code_contains",
+        "expected": "document.getElementById(\"resultado\").textContent"
+      }
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "basic",
+    "preview": true
+  },
+  "learningObjectives": [
+    "Entender funções JavaScript",
+    "Manipular o DOM",
+    "Obter valores de inputs",
+    "Converter tipos de dados",
+    "Exibir resultados na página"
+  ]
+}
