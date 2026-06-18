@@ -9,7 +9,7 @@
 |---------|-----------|
 | `FASE-00-PERFORMANCE.md` | Performance Crítica — boot em 3 camadas |
 | `FASE-01-UI-SIMPLIFICATION.md` | UI Simplification — modos EDU/PRO |
-| `FASE-02-EDU-MODE.md` | Edu Mode Engine — feature flags e Ollama |
+| `FASE-02-Exercise-Verification.md` | Verificação Automática e Gamificação |
 | `FASE-03-PERFORMANCE.md` | Performance Refinements — code splitting |
 | `FASE-04-ONBOARDING.md` | Onboarding & Templates — wizard e projetos |
 | `CHANGELOG.md` | Registro acumulativo de todas as alterações |
