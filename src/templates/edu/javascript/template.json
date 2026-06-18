@@ -1,0 +1,43 @@
+{
+  "name": "JavaScript Iniciante",
+  "language": "javascript",
+  "difficulty": "beginner",
+  "description": "Template inicial para aprender JavaScript com exemplos práticos",
+  "files": [
+    {
+      "path": "main.js",
+      "template": "exemplo_iniciante.js",
+      "description": "Arquivo principal com exemplo de função"
+    },
+    {
+      "path": "index.html",
+      "content": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>JS Iniciante</title>\n</head>\n<body>\n    <h1>Meu Primeiro Projeto JS</h1>\n    <script src=\"main.js\"></script>\n</body>\n</html>"
+    },
+    {
+      "path": "README.md",
+      "content": "# Projeto JavaScript - Iniciante\n\nEste projeto contém exemplos básicos de JavaScript para iniciantes.\n\n## Como usar:\n1. Abra o arquivo `main.js`\n2. Leia os comentários e complete os exercícios marcados com `TODO`\n3. Abra o `index.html` no navegador ou use o terminal\n\n## Conceitos abordados:\n- Funções\n- Template strings\n- Console.log\n- Comentários e JSDoc\n"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Primeira Função",
+      "instruction": "Complete a chamada da função saudacao com seu nome",
+      "hint": "Descomente a linha e substitua 'Seu Nome' pelo seu nome real",
+      "solution": "console.log(saudacao(\"João\"));"
+    },
+    {
+      "id": 2,
+      "title": "Criar Função de Soma",
+      "instruction": "Crie uma função somar que receba dois números e retorne a soma",
+      "hint": "Use: function somar(a, b) { return a + b; }",
+      "solution": "function somar(a, b) { return a + b; }"
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "basic"
+  }
+}

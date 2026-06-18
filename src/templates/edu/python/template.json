@@ -1,0 +1,32 @@
+{
+  "name": "Python Iniciante",
+  "language": "python",
+  "difficulty": "beginner",
+  "description": "Template inicial para aprender Python com exemplos práticos",
+  "files": [
+    {
+      "path": "main.py",
+      "template": "exemplo_iniciante.py",
+      "description": "Arquivo principal com exemplo de função"
+    },
+    {
+      "path": "README.md",
+      "content": "# Projeto Python - Iniciante\n\nEste projeto contém exemplos básicos de Python para iniciantes.\n\n## Como usar:\n1. Abra o arquivo `main.py`\n2. Leia os comentários e complete os exercícios marcados com `TODO`\n3. Execute o código pressionando F5 ou usando o terminal\n\n## Conceitos abordados:\n- Funções\n- Strings\n- Print e output\n- Comentários e documentação\n"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Primeira Função",
+      "instruction": "Complete a chamada da função saudacao com seu nome",
+      "hint": "Descomente a linha e substitua 'Seu Nome' pelo seu nome real",
+      "solution": "print(saudacao(\"Maria\"))"
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "basic"
+  }
+}

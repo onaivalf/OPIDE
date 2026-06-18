@@ -1,0 +1,44 @@
+{
+  "name": "Rust Iniciante",
+  "language": "rust",
+  "difficulty": "beginner",
+  "description": "Template inicial para aprender Rust com exemplos práticos e seguros",
+  "files": [
+    {
+      "path": "src/main.rs",
+      "template": "exemplo_iniciante.rs",
+      "description": "Arquivo principal com exemplo de função"
+    },
+    {
+      "path": "Cargo.toml",
+      "content": "[package]\nname = \"rust-iniciante\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]"
+    },
+    {
+      "path": "README.md",
+      "content": "# Projeto Rust - Iniciante\n\nEste projeto contém exemplos básicos de Rust para iniciantes.\n\n## Como usar:\n1. Abra o arquivo `src/main.rs`\n2. Leia os comentários e complete os exercícios marcados com `TODO`\n3. Execute com `cargo run` ou pressione F5\n\n## Conceitos abordados:\n- Funções\n- Strings e &str\n- Format macros\n- Testes unitários\n- Ownership básico\n\n## Executar testes:\n```bash\ncargo test\n```\n"
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Primeira Função",
+      "instruction": "Complete a chamada da função saudacao com seu nome",
+      "hint": "Descomente a linha e substitua 'Seu Nome' pelo seu nome real",
+      "solution": "println!(\"{}\", saudacao(\"Pedro\"));"
+    },
+    {
+      "id": 2,
+      "title": "Criar Função de Soma",
+      "instruction": "Crie uma função somar que receba dois i32 e retorne a soma",
+      "hint": "Use: fn somar(a: i32, b: i32) -> i32 { a + b }",
+      "solution": "fn somar(a: i32, b: i32) -> i32 { a + b }"
+    }
+  ],
+  "settings": {
+    "eduMode": true,
+    "showHints": true,
+    "autoSave": true,
+    "linting": "clippy",
+    "runTestsOnSave": true
+  }
+}
