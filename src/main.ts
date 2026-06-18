@@ -1,5 +1,64 @@
 import './global.css'
 import { initializeWorkbench, initializeDeferredFeatures } from './workbench.ts'
+import { isEduMode } from './components/EduToggle'
+
+/**
+ * FASE-03: Lazy loading de Monaco services
+ * Carrega serviços do Monaco sob demanda apenas em modo PRO ou quando necessário
+ */
+async function loadMonacoServicesLazy() {
+  // Em modo EDU, carrega apenas o essencial
+  if (isEduMode()) {
+    console.log('[FASE-03] EDU Mode: Loading minimal Monaco services')
+    // Apenas editor básico e linguagem simples
+    return import('@codingame/monaco-vscode-editor-service-override').then(() => {
+      console.log('[FASE-03] Minimal editor loaded')
+    })
+  }
+  
+  // Em modo PRO, carrega todos os serviços sob demanda
+  console.log('[FASE-03] PRO Mode: Loading Monaco services lazily')
+  
+  const servicePromises = [
+    // Core editor (sempre carrega)
+    import('@codingame/monaco-vscode-editor-service-override'),
+    
+    // Language services (lazy - só quando abrir arquivo de código)
+    new Promise(resolve => {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          import('@codingame/monaco-vscode-languages-service-override')
+            .then(() => console.log('[FASE-03] Language services loaded'))
+            .catch(console.warn)
+          observer.disconnect()
+          resolve(undefined)
+        }
+      }, { threshold: 0.1 })
+      
+      observer.observe(document.body)
+      // Timeout de segurança: carrega após 2s se não houver interação
+      setTimeout(() => {
+        observer.disconnect()
+        import('@codingame/monaco-vscode-languages-service-override')
+          .then(() => console.log('[FASE-03] Language services loaded (timeout)'))
+          .catch(console.warn)
+        resolve(undefined)
+      }, 2000)
+    }),
+    
+    // Theme service (lazy - após 1s)
+    new Promise(resolve => {
+      setTimeout(() => {
+        import('@codingame/monaco-vscode-theme-service-override')
+          .then(() => console.log('[FASE-03] Theme service loaded'))
+          .catch(console.warn)
+        resolve(undefined)
+      }, 1000)
+    }),
+  ]
+  
+  await Promise.all(servicePromises)
+}
 
 async function boot() {
   try {
@@ -12,6 +71,11 @@ async function boot() {
       loading.classList.add('hidden')
       setTimeout(() => loading.remove(), 400)
     }
+
+    // FASE-03: Lazy load Monaco services antes de inicializar features deferidas
+    await loadMonacoServicesLazy().catch(err => {
+      console.warn('[FASE-03] Monaco lazy loading failed:', err)
+    })
 
     // Phase 2: AI features, extensions, MCP, indexing — runs AFTER UI is visible
     // User sees the IDE immediately. Activity feed shows progress of deferred features.
