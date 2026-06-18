@@ -176,3 +176,158 @@ html, body {
 .monaco-progress-container .progress-bit {
   background: #E8B931 !important;
 }
+
+/* ─── 4. Edu Mode Theme Overrides ──────────────────────────────────────── */
+/* Tema amigável e claro para modo educacional */
+
+[data-edu-mode="true"] {
+  /* Cores principais do tema EDU - mais suaves e amigáveis */
+  --vscode-activityBar-background: #f0f4f8 !important;
+  --vscode-activityBar-foreground: #2d3748 !important;
+  --vscode-activityBar-inactiveForeground: #718096 !important;
+  --vscode-activityBar-activeBorder: #4299e1 !important;
+  --vscode-activityBarBadge-background: #4299e1 !important;
+  --vscode-activityBarBadge-foreground: #ffffff !important;
+
+  --vscode-sideBar-background: #f7fafc !important;
+  --vscode-sideBar-foreground: #2d3748 !important;
+  --vscode-sideBarSectionHeader-background: #edf2f7 !important;
+  --vscode-sideBarSectionHeader-foreground: #2d3748 !important;
+
+  --vscode-editor-background: #ffffff !important;
+  --vscode-editor-foreground: #2d3748 !important;
+  --vscode-editor-lineHighlightBackground: #ebf8ff !important;
+
+  --vscode-statusBar-background: #4299e1 !important;
+  --vscode-statusBar-foreground: #ffffff !important;
+  --vscode-statusBar-noFolderBackground: #48bb78 !important;
+
+  --vscode-titleBar-activeBackground: #f0f4f8 !important;
+  --vscode-titleBar-activeForeground: #2d3748 !important;
+
+  --vscode-button-background: #4299e1 !important;
+  --vscode-button-foreground: #ffffff !important;
+  --vscode-button-hoverBackground: #63b3ed !important;
+
+  --vscode-input-background: #ffffff !important;
+  --vscode-input-foreground: #2d3748 !important;
+  --vscode-input-border: #cbd5e0 !important;
+
+  --vscode-list-hoverBackground: #ebf8ff !important;
+  --vscode-list-activeSelectionBackground: #4299e1 !important;
+  --vscode-list-activeSelectionForeground: #ffffff !important;
+  --vscode-list-inactiveSelectionBackground: #bee3f8 !important;
+
+  /* Fonte mais amigável para iniciantes */
+  --opide-font-ui: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Edu Mode - Ocultar elementos avançados */
+[data-edu-mode="true"] .opide-memory-palace,
+[data-edu-mode="true"] .opide-activity-feed,
+[data-edu-mode="true"] .extension-gallery-view,
+[data-edu-mode="true"] .debug-view,
+[data-edu-mode="true"] .testing-view,
+[data-edu-mode="true"] .mcp-panel {
+  display: none !important;
+}
+
+/* Edu Toggle Button Styles */
+.edu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.edu-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cccccc;
+}
+
+.edu-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.edu-toggle-btn.edu-active {
+  background: #4299e1;
+  color: #ffffff;
+}
+
+.edu-toggle-btn.pro-active {
+  background: #2d3748;
+  color: #ffffff;
+}
+
+.toggle-icon {
+  font-size: 14px;
+}
+
+/* Edu Action Bar Styles */
+.edu-action-bar {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  backdrop-filter: blur(10px);
+}
+
+[data-edu-mode="true"] .edu-action-bar {
+  display: flex;
+}
+
+[data-edu-mode="false"] .edu-action-bar,
+:not([data-edu-mode]) .edu-action-bar {
+  display: none;
+}
+
+.edu-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: white;
+  color: #2d3748;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edu-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: var(--action-color, #4299e1);
+  color: white;
+}
+
+.action-icon {
+  font-size: 20px;
+}
+
+.action-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

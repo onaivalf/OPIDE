@@ -1,34 +1,57 @@
 ```
 # Dependencies
 node_modules/
-target/
-.cargo/
+vendor/
 
-# Build artifacts
+# Build outputs
 dist/
 build/
-
-# IDE
-.vscode/
-.idea/
+target/
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
 
-# Environment
+# Environment variables
 .env
 .env.local
 *.env.*
 
-# Rust/Cargo
-Cargo.lock
-target/
-.cargo/
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# Tauri
-src-tauri/target/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+coverage/
+htmlcov/
 
-# TypeScript/JavaScript
-node_modules/
-*.tsbuildinfo
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled files
+*.exe
+*.dll
+*.so
+*.a
+*.o
+*.out
+*.class
+
+# Cache directories
+.mypy_cache/
+.pytest_cache/
+.gradle/
 ```

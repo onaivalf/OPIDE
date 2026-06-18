@@ -7,6 +7,11 @@
 use opide_engine::commands;
 use tauri::Manager;
 use tauri::WebviewUrl;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::LazyLock;
+
+// Edu Mode state — global flag for EDU/PRO mode
+static EDU_MODE_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
 
 const OPIDE_IDENTITY: &str = r#"# OPIDE Agent Identity
 
@@ -80,6 +85,73 @@ fn get_target_platform() -> String {
         other => other,
     };
     format!("{os}-{arch}")
+}
+
+/// Get current Edu Mode state (true = EDU, false = PRO)
+#[tauri::command]
+fn get_edu_mode() -> bool {
+    EDU_MODE_ENABLED.load(Ordering::SeqCst)
+}
+
+/// Toggle Edu Mode on/off
+#[tauri::command]
+fn toggle_edu_mode(enabled: bool) -> Result<(), String> {
+    EDU_MODE_ENABLED.store(enabled, Ordering::SeqCst);
+    log::info!("[edu] mode toggled to: {}", if enabled { "EDU" } else { "PRO" });
+    Ok(())
+}
+
+/// Edu Mode: Run code (simplified execution for students)
+#[tauri::command]
+async fn edu_run_code(app: tauri::AppHandle) -> Result<String, String> {
+    // Placeholder implementation - should integrate with opide_shell terminal
+    let is_edu = EDU_MODE_ENABLED.load(Ordering::SeqCst);
+    if !is_edu {
+        return Err("Edu Mode not enabled".to_string());
+    }
+    
+    log::info!("[edu] run_code requested");
+    // TODO: Implement actual code execution via opide_shell
+    Ok("Code execution started (placeholder)".to_string())
+}
+
+/// Edu Mode: Test code (run tests for students)
+#[tauri::command]
+async fn edu_test_code(app: tauri::AppHandle) -> Result<String, String> {
+    let is_edu = EDU_MODE_ENABLED.load(Ordering::SeqCst);
+    if !is_edu {
+        return Err("Edu Mode not enabled".to_string());
+    }
+    
+    log::info!("[edu] test_code requested");
+    // TODO: Implement actual test running
+    Ok("Tests started (placeholder)".to_string())
+}
+
+/// Edu Mode: Explain code (AI-powered explanation)
+#[tauri::command]
+async fn edu_explain_code(app: tauri::AppHandle) -> Result<String, String> {
+    let is_edu = EDU_MODE_ENABLED.load(Ordering::SeqCst);
+    if !is_edu {
+        return Err("Edu Mode not enabled".to_string());
+    }
+    
+    log::info!("[edu] explain_code requested");
+    // TODO: Integrate with opide_engine chat for AI explanation
+    Ok("Code explanation requested (placeholder)".to_string())
+}
+
+/// Edu Mode: Save file (quick save for students)
+#[tauri::command]
+async fn edu_save_file(app: tauri::AppHandle) -> Result<(), String> {
+    let is_edu = EDU_MODE_ENABLED.load(Ordering::SeqCst);
+    if !is_edu {
+        return Err("Edu Mode not enabled".to_string());
+    }
+    
+    log::info!("[edu] save_file requested");
+    // TODO: Implement file save via tauri-plugin-fs
+    Ok(())
 }
 
 /// Open the OPIDE chat in a detached window. The detached window loads
@@ -620,6 +692,13 @@ pub fn run() {
             open_chat_window,
             close_chat_window,
             get_target_platform,
+            // Edu Mode commands
+            get_edu_mode,
+            toggle_edu_mode,
+            edu_run_code,
+            edu_test_code,
+            edu_explain_code,
+            edu_save_file,
             opide_shell::ide_mcp::ide_read_file,
             opide_shell::ide_mcp::ide_write_file,
             opide_shell::ide_mcp::ide_read_file_bytes,
