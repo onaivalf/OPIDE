@@ -2,6 +2,9 @@
 # Dependencies
 node_modules/
 vendor/
+.agents/
+.opide_edu_progress.json
+.opide_leaderboard.json
 
 # Build outputs
 dist/

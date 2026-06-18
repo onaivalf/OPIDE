@@ -7,6 +7,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core'
+import { addXp, getPlayerStats, unlockAchievement } from '../services/edu-progress'
 
 interface EduActionBarProps {
   onActionClick?: (action: string) => void
@@ -24,15 +25,29 @@ export function EduActionBar({ onActionClick }: EduActionBarProps) {
     try {
       onActionClick?.(actionId)
 
+      const currentStats = await getPlayerStats();
+
       switch (actionId) {
         case 'run':
           await invoke('edu_run_code')
+          await addXp(10)
+          if (!currentStats.achievements.includes('first_run')) {
+            await unlockAchievement('first_run')
+          }
           break
         case 'test':
           await invoke('edu_test_code')
+          await addXp(15)
+          if (!currentStats.achievements.includes('first_test')) {
+            await unlockAchievement('first_test')
+          }
           break
         case 'explain':
           await invoke('edu_explain_code')
+          await addXp(20)
+          if (!currentStats.achievements.includes('explain_used')) {
+            await unlockAchievement('explain_used')
+          }
           break
         case 'save':
           await invoke('edu_save_file')
@@ -42,7 +57,6 @@ export function EduActionBar({ onActionClick }: EduActionBarProps) {
       }
     } catch (error) {
       console.error(`[EduActionBar] Action ${actionId} failed:`, error)
-      // Feedback visual de erro poderia ser adicionado aqui
     }
   }
 

@@ -10,6 +10,9 @@ use tauri::WebviewUrl;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::LazyLock;
 
+mod gamification;
+mod lms_export;
+
 // Edu Mode state — global flag for EDU/PRO mode
 static EDU_MODE_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
 
@@ -137,8 +140,8 @@ async fn edu_explain_code(app: tauri::AppHandle) -> Result<String, String> {
     }
     
     log::info!("[edu] explain_code requested");
-    // TODO: Integrate with opide_engine chat for AI explanation
-    Ok("Code explanation requested (placeholder)".to_string())
+    let _ = app.emit("opide-edu-explain", "Por favor, explique o código atual de forma pedagógica, fornecendo dicas e explicações passo a passo em vez de apenas dar a resposta pronta.");
+    Ok("Code explanation requested".to_string())
 }
 
 /// Edu Mode: Save file (quick save for students)
@@ -699,6 +702,15 @@ pub fn run() {
             edu_test_code,
             edu_explain_code,
             edu_save_file,
+            gamification::get_player_stats,
+            gamification::add_xp,
+            gamification::unlock_achievement,
+            gamification::get_leaderboard,
+            gamification::mark_onboarding_complete,
+            gamification::create_edu_project,
+            lms_export::export_csv,
+            lms_export::export_scorm,
+            lms_export::generate_report,
             opide_shell::ide_mcp::ide_read_file,
             opide_shell::ide_mcp::ide_write_file,
             opide_shell::ide_mcp::ide_read_file_bytes,

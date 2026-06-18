@@ -12,8 +12,12 @@ interface EduToggleProps {
   onModeChange?: (isEdu: boolean) => void
 }
 
+export function isEduMode(): boolean {
+  return localStorage.getItem('opide:edu-mode') === 'true'
+}
+
 export function EduToggle({ onModeChange }: EduToggleProps) {
-  const [isEduMode, setIsEduMode] = useState<boolean>(false)
+  const [isEduModeState, setIsEduMode] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -25,11 +29,15 @@ export function EduToggle({ onModeChange }: EduToggleProps) {
     try {
       const isEdu = await invoke<boolean>('get_edu_mode')
       setIsEduMode(isEdu)
+      localStorage.setItem('opide:edu-mode', String(isEdu))
+      document.documentElement.setAttribute('data-edu-mode', String(isEdu))
       onModeChange?.(isEdu)
     } catch (error) {
       console.error('Failed to load edu mode:', error)
-      // Default para false (PRO) se falhar
-      setIsEduMode(false)
+      // Fallback para localStorage
+      const isEduLocal = isEduMode()
+      setIsEduMode(isEduLocal)
+      onModeChange?.(isEduLocal)
     } finally {
       setLoading(false)
     }
@@ -37,9 +45,10 @@ export function EduToggle({ onModeChange }: EduToggleProps) {
 
   async function toggleEduMode() {
     try {
-      const newMode = !isEduMode
+      const newMode = !isEduModeState
       await invoke('toggle_edu_mode', { enabled: newMode })
       setIsEduMode(newMode)
+      localStorage.setItem('opide:edu-mode', String(newMode))
       onModeChange?.(newMode)
       
       // Aplicar tema ao documento
@@ -67,11 +76,11 @@ export function EduToggle({ onModeChange }: EduToggleProps) {
     <div className="edu-toggle">
       <button
         onClick={toggleEduMode}
-        className={`edu-toggle-btn ${isEduMode ? 'edu-active' : 'pro-active'}`}
-        title={isEduMode ? 'Modo Educacional ativo - Clique para mudar para PRO' : 'Modo Profissional ativo - Clique para mudar para EDU'}
+        className={`edu-toggle-btn ${isEduModeState ? 'edu-active' : 'pro-active'}`}
+        title={isEduModeState ? 'Modo Educacional ativo - Clique para mudar para PRO' : 'Modo Profissional ativo - Clique para mudar para EDU'}
       >
-        <span className="toggle-icon">{isEduMode ? '🎓' : '💼'}</span>
-        <span className="toggle-label">{isEduMode ? 'Modo Aula' : 'Modo PRO'}</span>
+        <span className="toggle-icon">{isEduModeState ? '🎓' : '💼'}</span>
+        <span className="toggle-label">{isEduModeState ? 'Modo Aula' : 'Modo PRO'}</span>
       </button>
     </div>
   )
