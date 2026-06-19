@@ -44,6 +44,9 @@ urlencoding = "2"
 # Safe system directory access (used in gamification.rs, lms_export.rs)
 dirs = "6"
 
+# Temp files creation (used in exercise_verifier.rs)
+tempfile = "3"
+
 # OPIDE engine — agent loop, providers, sessions, MCP, atoms (extracted from OpenPawz)
 opide-engine = { path = "../crates/opide-engine", default-features = false }
 

@@ -318,6 +318,105 @@ impl ExerciseVerifier {
         }
     }
 
+    /// Executa teste unitário (implementação simplificada)
+    fn run_unit_test(
+        &self,
+        exercise: &ExerciseDefinition,
+        user_code: &str,
+        test: &TestConfig,
+    ) -> SingleTestResult {
+        // Implementação específica por linguagem seria necessária aqui
+        // Por enquanto, retorna um resultado placeholder
+        SingleTestResult {
+            passed: false,
+            error: Some("Testes unitários ainda não implementados para esta linguagem".to_string()),
+        }
+    }
+
+    /// Executa análise estática de código
+    fn run_static_analysis(
+        &self,
+        exercise: &ExerciseDefinition,
+        user_code: &str,
+        test: &TestConfig,
+    ) -> SingleTestResult {
+        // Verificações básicas de estilo e estrutura
+        let mut issues = Vec::new();
+
+        // Exemplo: verificar se o código não está vazio
+        if user_code.trim().is_empty() {
+            issues.push("Código vazio".to_string());
+        }
+
+        // Exemplo: verificar presença de comentários em Python
+        if exercise.language == "python" && !user_code.contains('#') {
+            issues.push("Código Python deve conter comentários explicativos".to_string());
+        }
+
+        if issues.is_empty() {
+            SingleTestResult { passed: true, error: None }
+        } else {
+            SingleTestResult {
+                passed: false,
+                error: Some(issues.join("; ")),
+            }
+        }
+    }
+
+    /// Gera feedback para o aluno
+    fn generate_feedback(
+        &self,
+        passed: bool,
+        tests_passed: usize,
+        tests_total: usize,
+        errors: &[String],
+        hints: &[String],
+    ) -> String {
+        if passed {
+            return "🎉 Parabéns! Todos os testes passaram com sucesso!".to_string();
+        }
+
+        let mut feedback = format!(
+            "Você passou em {} de {} testes.\n\n",
+            tests_passed, tests_total
+        );
+
+        if !errors.is_empty() {
+            feedback.push_str("Erros encontrados:\n");
+            for (i, error) in errors.iter().take(3).enumerate() {
+                feedback.push_str(&format!("{}. {}\n", i + 1, error));
+            }
+            if errors.len() > 3 {
+                feedback.push_str(&format!("... e mais {} erros.\n", errors.len() - 3));
+            }
+            feedback.push('\n');
+        }
+
+        if !hints.is_empty() && tests_passed < tests_total {
+            feedback.push_str("💡 Dicas:\n");
+            let hint_index = std::cmp::min(tests_passed, hints.len() - 1);
+            feedback.push_str(&format!("- {}\n", hints[hint_index]));
+        }
+
+        feedback
+    }
+
+    /// Obtém informações sobre um exercício
+    pub fn get_exercise(&self, exercise_id: &str) -> Option<&ExerciseDefinition> {
+        self.exercises.get(exercise_id)
+    }
+
+    /// Lista todos os exercícios disponíveis
+    pub fn list_exercises(&self) -> Vec<&ExerciseDefinition> {
+        self.exercises.values().collect()
+    }
+}
+
+struct SingleTestResult {
+    passed: bool,
+    error: Option<String>,
+}
+
 // Exportação para uso no frontend via Tauri
 #[tauri::command]
 pub fn verify_exercise(exercise_id: String, user_code: String) -> Result<ExerciseResult, String> {

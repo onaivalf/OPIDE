@@ -16,3 +16,4 @@ pub mod watcher;
 pub mod search;
 pub mod remote;
 pub mod ide_mcp;
+pub mod extension_host;

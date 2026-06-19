@@ -3966,6 +3966,7 @@ dependencies = [
  "tauri-plugin-process",
  "tauri-plugin-shell",
  "tauri-plugin-sql",
+ "tempfile",
  "tokio",
  "urlencoding",
  "uuid",

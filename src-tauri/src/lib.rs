@@ -6,6 +6,7 @@
 
 use opide_engine::commands;
 use tauri::Manager;
+use tauri::Emitter;
 use tauri::WebviewUrl;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::LazyLock;
