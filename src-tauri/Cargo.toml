@@ -41,6 +41,9 @@ tauri-plugin-localhost = "2.3.2"
 # Utility (used in lib.rs for multi-window URL encoding)
 urlencoding = "2"
 
+# Safe system directory access (used in gamification.rs, lms_export.rs)
+dirs = "6"
+
 # OPIDE engine — agent loop, providers, sessions, MCP, atoms (extracted from OpenPawz)
 opide-engine = { path = "../crates/opide-engine", default-features = false }
 

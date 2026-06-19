@@ -13,9 +13,8 @@
     "withGlobalTauri": true,
     "windows": [],
     "security": {
-      "csp": null,
-      "dangerousDisableAssetCspModification": true,
-      "freezePrototype": false,
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:* https://api.openpawz.com https://releases.openpawz.com https://open-vsx.org; frame-src 'self'; worker-src 'self' blob:;",
+      "freezePrototype": true,
       "headers": {
         "Cross-Origin-Opener-Policy": "same-origin",
         "Cross-Origin-Embedder-Policy": "require-corp"
@@ -53,9 +52,6 @@
         "https://releases.openpawz.com/opide/{{target}}/{{arch}}/{{current_version}}"
       ],
       "pubkey": ""
-    },
-    "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:* https://api.openpawz.com https://releases.openpawz.com; frame-src 'self'; worker-src 'self' blob:;"
     }
   }
 }

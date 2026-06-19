@@ -3,6 +3,15 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
+/// Diretório seguro para exports LMS
+fn get_export_dir() -> PathBuf {
+    let base = dirs::data_local_dir()
+        .unwrap_or_else(|| PathBuf::from("."));
+    let dir = base.join("OPIDE").join("exports");
+    let _ = std::fs::create_dir_all(&dir);
+    dir
+}
+
 #[tauri::command]
 pub fn export_csv(stats_json: String) -> Result<String, String> {
     // Deserialize stats to convert to CSV
@@ -26,7 +35,7 @@ pub fn export_csv(stats_json: String) -> Result<String, String> {
         csv.push_str(&format!("Conquistas,\"{}\"\n", list.join(";")));
     }
     
-    let path = PathBuf::from("opide_lms_export.csv");
+    let path = get_export_dir().join("opide_lms_export.csv");
     let mut file = File::create(&path).map_err(|e| e.to_string())?;
     file.write_all(csv.as_bytes()).map_err(|e| e.to_string())?;
     
@@ -63,7 +72,7 @@ pub fn export_scorm(stats_json: String) -> Result<String, String> {
   </resources>
 </manifest>"#, xp, level);
 
-    let path = PathBuf::from("imsmanifest.xml");
+    let path = get_export_dir().join("imsmanifest.xml");
     let mut file = File::create(&path).map_err(|e| e.to_string())?;
     file.write_all(manifest.as_bytes()).map_err(|e| e.to_string())?;
     
@@ -92,7 +101,7 @@ pub fn generate_report(stats_json: String, format_type: String) -> Result<String
     };
 
     let filename = if format_type.to_lowercase() == "html" { "opide_report.html" } else { "opide_report.txt" };
-    let path = PathBuf::from(filename);
+    let path = get_export_dir().join(filename);
     let mut file = File::create(&path).map_err(|e| e.to_string())?;
     file.write_all(report.as_bytes()).map_err(|e| e.to_string())?;
     

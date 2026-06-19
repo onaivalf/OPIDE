@@ -1,4 +1,3 @@
-```
 # Dependencies
 node_modules/
 vendor/
@@ -57,4 +56,9 @@ yarn-error.log*
 .mypy_cache/
 .pytest_cache/
 .gradle/
-```
+
+# LMS Export files (generated)
+opide_lms_export.csv
+imsmanifest.xml
+opide_report.html
+opide_report.txt

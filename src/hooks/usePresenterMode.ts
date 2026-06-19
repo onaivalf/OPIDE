@@ -7,8 +7,20 @@ export function usePresenterMode() {
   const [isActive, setIsActive] = useState<boolean>(false);
 
   useEffect(() => {
-    // Sync zoom level with document element style
-    document.documentElement.style.fontSize = `${zoomLevel}%`;
+    // Aplica zoom via CSS transform no container principal (não altera rem global)
+    const workbench = document.getElementById('workbench-container') ?? document.body;
+    const scale = zoomLevel / 100;
+    if (zoomLevel !== 100) {
+      workbench.style.transform = `scale(${scale})`;
+      workbench.style.transformOrigin = 'top left';
+      workbench.style.width = `${100 / scale}%`;
+      workbench.style.height = `${100 / scale}%`;
+    } else {
+      workbench.style.transform = '';
+      workbench.style.transformOrigin = '';
+      workbench.style.width = '';
+      workbench.style.height = '';
+    }
   }, [zoomLevel]);
 
   useEffect(() => {

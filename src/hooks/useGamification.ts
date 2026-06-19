@@ -16,17 +16,31 @@ export function useGamification() {
   };
 
   useEffect(() => {
-    fetchStats();
+    let isMounted = true;
+
+    const fetchInitial = async () => {
+      const s = await getPlayerStats();
+      if (!isMounted) return;
+      setStats(s);
+      const l = await getLeaderboard();
+      if (!isMounted) return;
+      setLeaderboard(l);
+      setLoading(false);
+    };
+
+    fetchInitial();
 
     const handleXpUpdate = (e: Event) => {
+      if (!isMounted) return;
       const customEvent = e as CustomEvent<PlayerStats>;
       setStats(customEvent.detail);
       // Refresh leaderboard when XP updates
-      getLeaderboard().then(setLeaderboard);
+      getLeaderboard().then((l) => { if (isMounted) setLeaderboard(l); });
     };
 
     window.addEventListener('opide-xp-updated', handleXpUpdate);
     return () => {
+      isMounted = false;
       window.removeEventListener('opide-xp-updated', handleXpUpdate);
     };
   }, []);

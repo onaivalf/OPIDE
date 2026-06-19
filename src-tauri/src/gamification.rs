@@ -27,13 +27,31 @@ pub struct LeaderboardEntry {
     pub level: u32,
 }
 
+/// Diretório seguro para dados do OPIDE Edu (evita path traversal)
+fn get_data_dir() -> PathBuf {
+    let base = dirs::data_local_dir()
+        .unwrap_or_else(|| PathBuf::from("."));
+    let dir = base.join("OPIDE").join("edu");
+    let _ = std::fs::create_dir_all(&dir);
+    dir
+}
+
 fn get_progress_file_path() -> PathBuf {
-    PathBuf::from(".opide_edu_progress.json")
+    get_data_dir().join("edu_progress.json")
 }
 
 fn get_leaderboard_file_path() -> PathBuf {
-    PathBuf::from(".opide_leaderboard.json")
+    get_data_dir().join("leaderboard.json")
 }
+
+/// Lista de IDs de achievement válidos
+const VALID_ACHIEVEMENTS: &[&str] = &[
+    "first_run", "first_test", "explain_used",
+    "onboarding_complete",
+    "level_2", "level_3", "level_4", "level_5",
+    "level_6", "level_7", "level_8", "level_9", "level_10",
+    "explorer", "consistent", "master",
+];
 
 fn load_stats() -> PlayerStats {
     let path = get_progress_file_path();
@@ -67,8 +85,10 @@ pub fn get_player_stats() -> Result<PlayerStats, String> {
 
 #[tauri::command]
 pub fn add_xp(amount: u32) -> Result<PlayerStats, String> {
+    // MOD-03: Limitar XP por chamada para evitar inflação
+    let safe_amount = amount.min(100);
     let mut stats = load_stats();
-    stats.xp += amount;
+    stats.xp += safe_amount;
     
     // Simple level up formula: 100 XP per level
     let new_level = (stats.xp / 100) + 1;
@@ -102,6 +122,10 @@ pub fn add_xp(amount: u32) -> Result<PlayerStats, String> {
 
 #[tauri::command]
 pub fn unlock_achievement(id: String) -> Result<PlayerStats, String> {
+    // MOD-04: Validar contra lista de IDs permitidos
+    if !VALID_ACHIEVEMENTS.contains(&id.as_str()) && !id.starts_with("level_") {
+        return Err(format!("Achievement inválido: {}", id));
+    }
     let mut stats = load_stats();
     if !stats.achievements.contains(&id) {
         stats.achievements.push(id);
@@ -160,7 +184,7 @@ pub fn mark_onboarding_complete() -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn create_edu_project(template_id: String, _project_name: String) -> Result<(), String> {
+pub fn create_edu_project(template_id: String, project_name: String) -> Result<(), String> {
     let (file_name, content) = match template_id.as_str() {
         "ola-mundo" => ("main.py", "print(\"Olá, mundo!\")\n"),
         "calculadora" => ("main.js", "console.log(\"Calculadora Iniciada\");\n"),
@@ -171,7 +195,19 @@ pub fn create_edu_project(template_id: String, _project_name: String) -> Result<
         _ => ("main.py", "print(\"Olá, mundo!\")\n")
     };
 
-    let path = PathBuf::from(file_name);
+    // CRIT-01: Usar diretório seguro em vez de caminho relativo
+    // Sanitizar nome do projeto para evitar path traversal
+    let safe_name: String = project_name
+        .chars()
+        .filter(|c| c.is_alphanumeric() || *c == '-' || *c == '_')
+        .take(64)
+        .collect();
+    let safe_name = if safe_name.is_empty() { "projeto-edu".to_string() } else { safe_name };
+
+    let project_dir = get_data_dir().join("projects").join(&safe_name);
+    std::fs::create_dir_all(&project_dir).map_err(|e| e.to_string())?;
+
+    let path = project_dir.join(file_name);
     let mut file = File::create(&path).map_err(|e| e.to_string())?;
     file.write_all(content.as_bytes()).map_err(|e| e.to_string())?;
     Ok(())

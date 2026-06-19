@@ -171,7 +171,7 @@ impl ExerciseVerifier {
         }
     }
 
-    /// Executa teste de entrada/saída
+    /// Executa teste de entrada/saída com sandbox de tempo (timeout de 10s)
     fn run_io_test(
         &self,
         exercise: &ExerciseDefinition,
@@ -179,7 +179,14 @@ impl ExerciseVerifier {
         test: &TestConfig,
     ) -> SingleTestResult {
         // Cria um arquivo temporário com o código do usuário
-        let temp_dir = tempfile::tempdir().map_err(|e| e.to_string()).unwrap();
+        let temp_dir = match tempfile::tempdir() {
+            Ok(d) => d,
+            Err(e) => return SingleTestResult {
+                passed: false,
+                error: Some(format!("Falha ao criar diretório temporário: {}", e)),
+            },
+        };
+
         let code_file = temp_dir.path().join(match exercise.language.as_str() {
             "python" => "solution.py",
             "javascript" | "typescript" => "solution.js",
@@ -187,46 +194,53 @@ impl ExerciseVerifier {
             _ => "solution.txt",
         });
 
-        fs::write(&code_file, user_code).map_err(|e| e.to_string()).unwrap();
+        if let Err(e) = fs::write(&code_file, user_code) {
+            return SingleTestResult {
+                passed: false,
+                error: Some(format!("Falha ao gravar código: {}", e)),
+            };
+        }
 
-        // Executa o código baseado na linguagem
+        // Tempo limite de execução (10 segundos)
+        let timeout = std::time::Duration::from_secs(10);
+        let input_data = test.input.clone().unwrap_or_default();
+
+        // Prepara o comando baseado na linguagem
         let output = match exercise.language.as_str() {
-            "python" => Command::new("python3")
-                .arg(&code_file)
-                .input(test.input.as_deref().unwrap_or(""))
-                .output(),
-            "javascript" | "typescript" => Command::new("node")
-                .arg(&code_file)
-                .input(test.input.as_deref().unwrap_or(""))
-                .output(),
+            "python" => Self::run_with_timeout("python3", &[code_file.to_str().unwrap_or("")], &input_data, timeout),
+            "javascript" | "typescript" => Self::run_with_timeout("node", &[code_file.to_str().unwrap_or("")], &input_data, timeout),
             "rust" => {
                 // Para Rust, precisamos compilar primeiro
                 let bin_file = temp_dir.path().join("solution");
-                let compile_result = Command::new("rustc")
+                match Command::new("rustc")
                     .arg(&code_file)
                     .arg("-o")
                     .arg(&bin_file)
-                    .output();
-
-                match compile_result {
+                    .stdout(std::process::Stdio::piped())
+                    .stderr(std::process::Stdio::piped())
+                    .output()
+                {
                     Ok(out) if out.status.success() => {
-                        Command::new(&bin_file)
-                            .input(test.input.as_deref().unwrap_or(""))
-                            .output()
+                        Self::run_with_timeout(
+                            bin_file.to_str().unwrap_or(""),
+                            &[],
+                            &input_data,
+                            timeout,
+                        )
                     }
                     Ok(out) => return SingleTestResult {
                         passed: false,
-                        error: Some(String::from_utf8_lossy(&out.stderr).to_string()),
+                        error: Some(format!("Erro de compilação: {}", String::from_utf8_lossy(&out.stderr))),
                     },
                     Err(e) => return SingleTestResult {
                         passed: false,
-                        error: Some(e.to_string()),
+                        error: Some(format!("Falha ao iniciar compilador: {}", e)),
                     },
                 }
             }
-            _ => return SingleTestResult {
+            lang => return SingleTestResult {
                 passed: false,
-                error: Some(format!("Linguagem '{}' não suportada", exercise.language)),
+                error: Some(format!("Linguagem '{}' não suportada", lang)),
             },
         };
 
@@ -234,7 +248,7 @@ impl ExerciseVerifier {
             Ok(out) => {
                 let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
                 let expected = test.expected_output.as_deref().unwrap_or("").trim();
-                
+
                 if stdout == expected && out.status.success() {
                     SingleTestResult { passed: true, error: None }
                 } else {
@@ -248,133 +262,61 @@ impl ExerciseVerifier {
             }
             Err(e) => SingleTestResult {
                 passed: false,
-                error: Some(format!("Falha ao executar: {}", e)),
+                error: Some(e),
             },
         }
     }
 
-    /// Executa teste unitário (implementação simplificada)
-    fn run_unit_test(
-        &self,
-        exercise: &ExerciseDefinition,
-        user_code: &str,
-        test: &TestConfig,
-    ) -> SingleTestResult {
-        // Implementação específica por linguagem seria necessária aqui
-        // Por enquanto, retorna um resultado placeholder
-        SingleTestResult {
-            passed: false,
-            error: Some("Testes unitários ainda não implementados para esta linguagem".to_string()),
-        }
-    }
-
-    /// Executa análise estática de código
-    fn run_static_analysis(
-        &self,
-        exercise: &ExerciseDefinition,
-        user_code: &str,
-        test: &TestConfig,
-    ) -> SingleTestResult {
-        // Verificações básicas de estilo e estrutura
-        let mut issues = Vec::new();
-
-        // Exemplo: verificar se o código não está vazio
-        if user_code.trim().is_empty() {
-            issues.push("Código vazio".to_string());
-        }
-
-        // Exemplo: verificar presença de comentários em Python
-        if exercise.language == "python" && !user_code.contains('#') {
-            issues.push("Código Python deve conter comentários explicativos".to_string());
-        }
-
-        if issues.is_empty() {
-            SingleTestResult { passed: true, error: None }
-        } else {
-            SingleTestResult {
-                passed: false,
-                error: Some(issues.join("; ")),
-            }
-        }
-    }
-
-    /// Gera feedback para o aluno
-    fn generate_feedback(
-        &self,
-        passed: bool,
-        tests_passed: usize,
-        tests_total: usize,
-        errors: &[String],
-        hints: &[String],
-    ) -> String {
-        if passed {
-            return "🎉 Parabéns! Todos os testes passaram com sucesso!".to_string();
-        }
-
-        let mut feedback = format!(
-            "Você passou em {} de {} testes.\n\n",
-            tests_passed, tests_total
-        );
-
-        if !errors.is_empty() {
-            feedback.push_str("Erros encontrados:\n");
-            for (i, error) in errors.iter().take(3).enumerate() {
-                feedback.push_str(&format!("{}. {}\n", i + 1, error));
-            }
-            if errors.len() > 3 {
-                feedback.push_str(&format!("... e mais {} erros.\n", errors.len() - 3));
-            }
-            feedback.push('\n');
-        }
-
-        if !hints.is_empty() && tests_passed < tests_total {
-            feedback.push_str("💡 Dicas:\n");
-            let hint_index = std::cmp::min(tests_passed, hints.len() - 1);
-            feedback.push_str(&format!("- {}\n", hints[hint_index]));
-        }
-
-        feedback
-    }
-
-    /// Obtém informações sobre um exercício
-    pub fn get_exercise(&self, exercise_id: &str) -> Option<&ExerciseDefinition> {
-        self.exercises.get(exercise_id)
-    }
-
-    /// Lista todos os exercícios disponíveis
-    pub fn list_exercises(&self) -> Vec<&ExerciseDefinition> {
-        self.exercises.values().collect()
-    }
-}
-
-struct SingleTestResult {
-    passed: bool,
-    error: Option<String>,
-}
-
-// Trait para estender Command com método input
-trait CommandExt {
-    fn input(&mut self, input: &str) -> &mut Self;
-}
-
-impl CommandExt for Command {
-    fn input(&mut self, input: &str) -> &mut Self {
+    /// Executa um comando com timeout e stdin, retornando Output ou erro.
+    fn run_with_timeout(
+        program: &str,
+        args: &[&str],
+        stdin_data: &str,
+        timeout: std::time::Duration,
+    ) -> Result<std::process::Output, String> {
         use std::io::Write;
-        self.stdin(std::process::Stdio::piped());
-        self.stdout(std::process::Stdio::piped());
-        self.stderr(std::process::Stdio::piped());
-        
-        let mut child = self.spawn().expect("Failed to spawn command");
-        {
-            let stdin = child.stdin.as_mut().expect("Failed to open stdin");
-            stdin.write_all(input.as_bytes()).expect("Failed to write to stdin");
+
+        let mut child = Command::new(program)
+            .args(args)
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .map_err(|e| format!("Falha ao iniciar '{}': {}", program, e))?;
+
+        // Escreve stdin e fecha
+        if let Some(mut stdin) = child.stdin.take() {
+            let _ = stdin.write_all(stdin_data.as_bytes());
+            // stdin é fechado aqui ao sair do escopo
         }
-        
-        // Substituímos self pelo child, mas isso não é possível diretamente
-        // Esta é uma implementação simplificada - na prática precisaríamos de uma abordagem diferente
-        self // Placeholder
+
+        // Espera com timeout
+        let start = std::time::Instant::now();
+        loop {
+            match child.try_wait() {
+                Ok(Some(_status)) => {
+                    // Processo terminou — coletar output
+                    return child.wait_with_output()
+                        .map_err(|e| format!("Falha ao coletar saída: {}", e));
+                }
+                Ok(None) => {
+                    if start.elapsed() > timeout {
+                        let _ = child.kill();
+                        let _ = child.wait(); // Limpar zombie
+                        return Err(format!(
+                            "⏱️ Timeout: execução excedeu {} segundos. Verifique se há loops infinitos.",
+                            timeout.as_secs()
+                        ));
+                    }
+                    std::thread::sleep(std::time::Duration::from_millis(50));
+                }
+                Err(e) => {
+                    let _ = child.kill();
+                    return Err(format!("Erro ao verificar processo: {}", e));
+                }
+            }
+        }
     }
-}
 
 // Exportação para uso no frontend via Tauri
 #[tauri::command]
