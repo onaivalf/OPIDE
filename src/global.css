@@ -10,6 +10,7 @@
 /* Import Londrina Shadow font — uses display=optional to prevent render blocking.
    Font loads in background; if not ready by first paint, uses fallback until next navigation. */
 @import url('https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=optional');
+@import './styles/edu-components.css';
 
 /* ─── 1. Reset & shell ───────────────────────────────────────────────────── */
 

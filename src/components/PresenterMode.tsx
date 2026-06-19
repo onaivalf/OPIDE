@@ -18,19 +18,7 @@ export function PresenterMode() {
     return (
       <button
         onClick={togglePresenterMode}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          left: '240px',
-          padding: '10px 16px',
-          background: '#1e3c72',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '8px',
-          color: '#fff',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          zIndex: 9999
-        }}
+        className="presenter-toggle-trigger"
       >
         👨‍🏫 Modo Apresentador
       </button>
@@ -38,62 +26,30 @@ export function PresenterMode() {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: '24px',
-      left: '240px',
-      background: '#1e1e1e',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      borderRadius: '8px',
-      padding: '8px 16px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      zIndex: 9999,
-      color: '#fff',
-      boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+    <div className="presenter-control-panel">
       <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#ffeb3b' }}>Apresentação:</span>
       
-      <button onClick={decreaseZoom} style={btnStyle}>🔍-</button>
+      <button onClick={decreaseZoom} className="presenter-btn">🔍-</button>
       <span style={{ fontSize: '12px' }}>{zoomLevel}%</span>
-      <button onClick={increaseZoom} style={btnStyle}>🔍+</button>
+      <button onClick={increaseZoom} className="presenter-btn">🔍+</button>
 
       <button
         onClick={() => setLaserPointer(!isLaserPointer)}
-        style={{
-          ...btnStyle,
-          background: isLaserPointer ? '#f44336' : 'rgba(255,255,255,0.05)'
-        }}
+        className={`presenter-btn ${isLaserPointer ? 'laser-active' : ''}`}
       >
         🔴 Laser
       </button>
 
       <button
         onClick={() => setHighlightMode(!isHighlightMode)}
-        style={{
-          ...btnStyle,
-          background: isHighlightMode ? '#4caf50' : 'rgba(255,255,255,0.05)'
-        }}
+        className={`presenter-btn ${isHighlightMode ? 'highlight-active' : ''}`}
       >
         ✏️ Destaque
       </button>
 
-      <button onClick={togglePresenterMode} style={{ ...btnStyle, background: '#f44336' }}>
+      <button onClick={togglePresenterMode} className="presenter-btn exit-btn">
         Sair
       </button>
     </div>
   );
 }
-
-const btnStyle: React.CSSProperties = {
-  padding: '6px 12px',
-  background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: '4px',
-  color: '#fff',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  cursor: 'pointer'
-};

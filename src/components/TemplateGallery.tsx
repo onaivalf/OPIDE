@@ -35,81 +35,35 @@ export function TemplateGallery({ onClose, onTemplateCreated }: TemplateGalleryP
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '500px',
-      background: '#1e1e1e',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      boxShadow: '0 10px 40px rgba(0,0,0,0.6)',
-      padding: '24px',
-      zIndex: 10000,
-      color: '#fff',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h3 style={{ margin: 0, fontSize: '18px', color: '#ffeb3b', display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div className="edu-modal-container edu-modal-container-wide">
+      <div className="edu-modal-header">
+        <h3 className="edu-modal-title yellow">
           📂 Galeria de Templates
         </h3>
-        <button onClick={onClose} style={{
-          background: 'none',
-          border: 'none',
-          color: '#aaa',
-          fontSize: '18px',
-          cursor: 'pointer'
-        }}>✕</button>
+        <button onClick={onClose} className="edu-modal-close-btn">✕</button>
       </div>
 
-      {error && <div style={{ color: '#ff5252', marginBottom: '12px', fontSize: '14px' }}>{error}</div>}
+      {error && <div className="edu-modal-error">{error}</div>}
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '12px',
-        maxHeight: '350px',
-        overflowY: 'auto',
-        paddingRight: '6px'
-      }}>
+      <div className="gallery-grid">
         {templates.map((t) => (
-          <div key={t.id} style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: '8px',
-            padding: '14px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            gap: '8px'
-          }}>
+          <div key={t.id} className="gallery-card">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '20px' }}>{t.icon}</span>
-                <span style={{ fontWeight: 'bold', fontSize: '14px' }}>{t.name}</span>
+              <div className="gallery-card-header">
+                <span className="gallery-card-icon">{t.icon}</span>
+                <span className="gallery-card-title">{t.name}</span>
               </div>
-              <div style={{ fontSize: '10px', color: '#81c784', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              <div className="gallery-card-lang">
                 {t.language}
               </div>
-              <p style={{ fontSize: '11px', color: '#b0bec5', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+              <p className="gallery-card-desc">
                 {t.desc}
               </p>
             </div>
             <button
               disabled={loading}
               onClick={() => handleCreate(t.id)}
-              style={{
-                width: '100%',
-                padding: '6px 12px',
-                background: '#4caf50',
-                border: 'none',
-                borderRadius: '4px',
-                color: '#fff',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                fontSize: '11px'
-              }}
+              className="gallery-card-btn"
             >
               Criar
             </button>

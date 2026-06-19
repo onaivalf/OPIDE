@@ -12,6 +12,7 @@ use std::sync::LazyLock;
 
 mod gamification;
 mod lms_export;
+mod exercise_verifier;
 
 // Edu Mode state — global flag for EDU/PRO mode
 static EDU_MODE_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
@@ -711,6 +712,7 @@ pub fn run() {
             lms_export::export_csv,
             lms_export::export_scorm,
             lms_export::generate_report,
+            exercise_verifier::verify_exercise,
             opide_shell::ide_mcp::ide_read_file,
             opide_shell::ide_mcp::ide_write_file,
             opide_shell::ide_mcp::ide_read_file_bytes,
