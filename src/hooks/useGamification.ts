@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getPlayerStats, addXp, unlockAchievement, getLeaderboard, PlayerStats, LeaderboardEntry } from '../services/edu-progress';
+import { getPlayerStats, addXp, unlockAchievement, getLeaderboard } from '../services/edu-progress';
+import type { PlayerStats, LeaderboardEntry } from '../services/edu-progress';
 
 export function useGamification() {
   const [stats, setStats] = useState<PlayerStats>({ xp: 0, level: 1, achievements: [] });

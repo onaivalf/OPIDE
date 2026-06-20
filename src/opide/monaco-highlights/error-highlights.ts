@@ -3,10 +3,10 @@
 // Propósito: Sistema de highlights de erros e quick fixes no Monaco Editor
 // Dependências: @codingame/monaco-vscode-api, markers-service-override
 
-import * as monaco from '@codingame/monaco-vscode-api/monaco'
+import { editor, MarkerSeverity, Range, Uri, languages } from 'monaco-editor'
 
 export interface IErrorHighlight {
-  severity: monaco.MarkerSeverity
+  severity: MarkerSeverity
   message: string
   startLineNumber: number
   startColumn: number
@@ -14,7 +14,7 @@ export interface IErrorHighlight {
   endColumn: number
   code?: string
   source?: string
-  relatedInformation?: monaco.editor.IMarkerData[]
+  relatedInformation?: editor.IMarkerData[]
   actions?: IQuickFixAction[]
 }
 
@@ -54,10 +54,10 @@ export interface ITextEdit {
  */
 export class ErrorHighlightManager {
   private static instance: ErrorHighlightManager | null = null
-  private markerCollection: Map<string, monaco.editor.IMarkerData[]> = new Map()
+  private markerCollection: Map<string, editor.IMarkerData[]> = new Map()
   private quickFixes: Map<string, IQuickFixAction[]> = new Map()
-  private decorationCollection: Map<string, monaco.editor.IEditorDecorationsCollection> = new Map()
-  private editorInstance: monaco.editor.IStandaloneCodeEditor | null = null
+  private decorationCollection: Map<string, editor.IEditorDecorationsCollection> = new Map()
+  private editorInstance: editor.IStandaloneCodeEditor | null = null
 
   private constructor() {}
 
@@ -71,13 +71,13 @@ export class ErrorHighlightManager {
   /**
    * Registra um editor para gerenciar highlights
    */
-  public registerEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
-    this.editorInstance = editor
-    const model = editor.getModel()
+  public registerEditor(editorInstance: editor.IStandaloneCodeEditor): void {
+    this.editorInstance = editorInstance
+    const model = editorInstance.getModel()
     if (model) {
       const uri = model.uri.toString()
       if (!this.decorationCollection.has(uri)) {
-        const collection = editor.createDecorationsCollection()
+        const collection = editorInstance.createDecorationsCollection()
         this.decorationCollection.set(uri, collection)
       }
     }
@@ -87,7 +87,7 @@ export class ErrorHighlightManager {
    * Adiciona highlights de erro para um arquivo
    */
   public addHighlights(uri: string, errors: IErrorHighlight[]): void {
-    const markers: monaco.editor.IMarkerData[] = errors.map(err => ({
+    const markers: editor.IMarkerData[] = errors.map(err => ({
       severity: err.severity,
       message: err.message,
       startLineNumber: err.startLineNumber,
@@ -100,9 +100,9 @@ export class ErrorHighlightManager {
     }))
 
     // Atualiza markers no Monaco
-    const modelUri = monaco.Uri.parse(uri)
-    monaco.editor.setModelMarkers(
-      monaco.editor.getModel(modelUri) || { uri: modelUri } as any,
+    const modelUri = Uri.parse(uri)
+    editor.setModelMarkers(
+      editor.getModel(modelUri) || { uri: modelUri } as any,
       'opide-errors',
       markers
     )
@@ -128,9 +128,9 @@ export class ErrorHighlightManager {
    * Remove highlights de um arquivo
    */
   public removeHighlights(uri: string): void {
-    const modelUri = monaco.Uri.parse(uri)
-    monaco.editor.setModelMarkers(
-      monaco.editor.getModel(modelUri) || { uri: modelUri } as any,
+    const modelUri = Uri.parse(uri)
+    editor.setModelMarkers(
+      editor.getModel(modelUri) || { uri: modelUri } as any,
       'opide-errors',
       []
     )
@@ -186,11 +186,11 @@ export class ErrorHighlightManager {
     }
 
     try {
-      const workspaceEdit = new monaco.languages.WorkspaceEdit()
+      const workspaceEdit = new languages.WorkspaceEdit()
       
       for (const textEdit of action.edit.edits) {
-        const uri = monaco.Uri.parse(textEdit.resource)
-        const range = new monaco.Range(
+        const uri = Uri.parse(textEdit.resource)
+        const range = new Range(
           textEdit.edit.range.startLineNumber,
           textEdit.edit.range.startColumn,
           textEdit.edit.range.endLineNumber,
@@ -210,7 +210,7 @@ export class ErrorHighlightManager {
       }
 
       // Aplica a edição
-      await monaco.languages.applyWorkspaceEdit(workspaceEdit)
+      await languages.applyWorkspaceEdit(workspaceEdit)
       console.log(`[FASE-03] Applied quick fix: ${action.title}`)
       return true
     } catch (error) {
@@ -229,7 +229,7 @@ export class ErrorHighlightManager {
     if (!model || model.uri.toString() !== uri) return
 
     const decorations = errors.map(err => ({
-      range: new monaco.Range(
+      range: new Range(
         err.startLineNumber,
         err.startColumn,
         err.endLineNumber,
@@ -237,22 +237,22 @@ export class ErrorHighlightManager {
       ),
       options: {
         isWholeLine: false,
-        glyphMarginClassName: err.severity === monaco.MarkerSeverity.Error 
+        glyphMarginClassName: err.severity === MarkerSeverity.Error 
           ? 'codicon codicon-error' 
-          : err.severity === monaco.MarkerSeverity.Warning 
+          : err.severity === MarkerSeverity.Warning 
             ? 'codicon codicon-warning' 
             : 'codicon codicon-info',
         glyphMarginHoverMessage: { value: err.message },
-        className: err.severity === monaco.MarkerSeverity.Error 
+        className: err.severity === MarkerSeverity.Error 
           ? 'opide-error-line' 
-          : err.severity === monaco.MarkerSeverity.Warning 
+          : err.severity === MarkerSeverity.Warning 
             ? 'opide-warning-line' 
             : 'opide-info-line',
         hoverMessage: { value: err.message },
         minimap: {
-          color: err.severity === monaco.MarkerSeverity.Error 
+          color: err.severity === MarkerSeverity.Error 
             ? '#ff6b6b' 
-            : err.severity === monaco.MarkerSeverity.Warning 
+            : err.severity === MarkerSeverity.Warning 
               ? '#ffd93d' 
               : '#6bcb77',
           position: 1
@@ -308,7 +308,7 @@ export class ErrorHighlightFactory {
     }
 
     return {
-      severity: monaco.MarkerSeverity.Error,
+      severity: MarkerSeverity.Error,
       message,
       startLineNumber: line,
       startColumn: column,
@@ -331,7 +331,7 @@ export class ErrorHighlightFactory {
     actualType: string
   ): IErrorHighlight {
     return {
-      severity: monaco.MarkerSeverity.Error,
+      severity: MarkerSeverity.Error,
       message: `${message}: esperado ${expectedType}, recebido ${actualType}`,
       startLineNumber: line,
       startColumn: column,
@@ -396,7 +396,7 @@ export class ErrorHighlightFactory {
     }
 
     return {
-      severity: monaco.MarkerSeverity.Warning,
+      severity: MarkerSeverity.Warning,
       message,
       startLineNumber: line,
       startColumn: column,

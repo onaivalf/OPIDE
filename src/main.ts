@@ -83,6 +83,26 @@ async function boot() {
       console.warn('[OPIDE] Deferred features failed:', err)
       showStartupError(`Some IDE features failed to load: ${err}`)
     })
+
+    // Mount EduModeManager React components to handle educational features
+    try {
+      const { createElement } = await import('react')
+      const { createRoot } = await import('react-dom/client')
+      const { EduModeManager } = await import('./components/EduModeManager')
+      
+      let eduRoot = document.getElementById('opide-edu-root')
+      if (!eduRoot) {
+        eduRoot = document.createElement('div')
+        eduRoot.id = 'opide-edu-root'
+        document.body.appendChild(eduRoot)
+      }
+      
+      const root = createRoot(eduRoot)
+      root.render(createElement(EduModeManager))
+      console.log('[OPIDE] EduModeManager mounted successfully')
+    } catch (err) {
+      console.warn('[OPIDE] Failed to mount EduModeManager:', err)
+    }
   } catch (err) {
     console.error('[OPIDE] Workbench initialization failed:', err)
     const loading = document.getElementById('workbench-loading')

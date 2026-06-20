@@ -1,5 +1,5 @@
 import React from 'react'
-import { useExerciseVerifier, ExerciseResult } from '../hooks/useExerciseVerifier'
+import { useExerciseVerifier, type ExerciseResult } from '../../hooks/useExerciseVerifier'
 
 interface ExercisePanelProps {
   exerciseId: string
@@ -118,7 +118,7 @@ export const ExercisePanel: React.FC<ExercisePanelProps> = ({
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .exercise-panel {
           display: flex;
           flex-direction: column;

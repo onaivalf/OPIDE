@@ -18,6 +18,9 @@ export function EduActionBar({ onActionClick }: EduActionBarProps) {
     { id: 'run', label: 'Rodar', icon: '▶️', color: '#4CAF50' },
     { id: 'test', label: 'Testar', icon: '🐛', color: '#FF9800' },
     { id: 'explain', label: 'Explicar', icon: '🤖', color: '#2196F3' },
+    { id: 'templates', label: 'Templates', icon: '📂', color: '#E8B931' },
+    { id: 'leaderboard', label: 'Ranking', icon: '🏆', color: '#FFD700' },
+    { id: 'lms', label: 'LMS', icon: '📤', color: '#81c784' },
     { id: 'save', label: 'Salvar', icon: '💾', color: '#9C27B0' },
   ]
 
@@ -51,6 +54,11 @@ export function EduActionBar({ onActionClick }: EduActionBarProps) {
           break
         case 'save':
           await invoke('edu_save_file')
+          break
+        case 'templates':
+        case 'leaderboard':
+        case 'lms':
+          // Handle in parent orchestrator
           break
         default:
           console.warn(`[EduActionBar] Unknown action: ${actionId}`)

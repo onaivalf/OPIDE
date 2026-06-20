@@ -431,6 +431,59 @@ const CHAT_STYLES = `
 export function registerOpideChat(): void {
   ensureListening().catch(console.error)
 
+  listen<string>('opide-edu-explain', async (event) => {
+    try {
+      const { StandaloneServices } = await import('@codingame/monaco-vscode-api/services')
+      const { ICommandService } = await import(
+        '@codingame/monaco-vscode-api/vscode/vs/platform/commands/common/commands'
+      )
+      const cs = StandaloneServices.get(ICommandService) as any
+      await cs?.executeCommand?.('workbench.action.focusAuxiliaryBar')
+      try { await cs?.executeCommand?.('opide.chat.focus') } catch {}
+    } catch {}
+
+    let codeContext = ''
+    try {
+      const { getService, ICodeEditorService } = await import('@codingame/monaco-vscode-api/services')
+      const editorService = await getService(ICodeEditorService)
+      const editor = (editorService as any).getActiveCodeEditor?.()
+      const model = editor?.getModel?.()
+      if (editor && model) {
+        let selection = editor.getSelection?.()
+        let text = ''
+        if (selection && !selection.isEmpty?.()) {
+          text = model.getValueInRange(selection)
+        } else {
+          text = model.getValue()
+        }
+        if (text && text.trim()) {
+          const lang = model.getLanguageId?.() || ''
+          const file = (model.uri?.fsPath || model.uri?.path || 'file').split('/').pop()
+          codeContext = `\n\nAqui está o meu código atual (${file}):\n\`\`\`${lang}\n${text}\n\`\`\``
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to get code context for explanation:', err)
+    }
+
+    const prompt = (event.payload || '') + codeContext
+    let retries = 10
+    const populateAndSend = async () => {
+      const ta = S.textarea
+      if (ta) {
+        ta.value = prompt
+        ta.dispatchEvent(new Event('input'))
+        ta.focus()
+        const { doSend } = await import('./send.ts')
+        doSend().catch(console.error)
+      } else if (retries > 0) {
+        retries--
+        setTimeout(populateAndSend, 150)
+      }
+    }
+    populateAndSend()
+  }).catch(console.error)
+
   registerCustomView({
     id: 'opide.chat',
     name: 'OPIDE',

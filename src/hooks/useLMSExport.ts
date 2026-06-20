@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import { PlayerStats } from '../services/edu-progress';
+import type { PlayerStats } from '../services/edu-progress';
 
 export function useLMSExport() {
   const exportToCSV = async (stats: PlayerStats): Promise<string> => {

@@ -407,3 +407,29 @@
   color: #78909c;
   margin-top: 4px;
 }
+
+/* Container do gerenciador do modo educacional */
+.edu-mode-manager-container {
+  pointer-events: none;
+}
+.edu-mode-manager-container * {
+  pointer-events: auto;
+}
+
+/* Floating EduToggle no canto superior direito */
+.edu-floating-toggle {
+  position: fixed;
+  top: 6px;
+  right: 120px;
+  z-index: 99999;
+}
+
+/* Floating Progress Bar no canto inferior esquerdo */
+.edu-floating-progress {
+  position: fixed;
+  bottom: 80px;
+  left: 20px;
+  width: 260px;
+  z-index: 10000;
+  pointer-events: auto;
+}

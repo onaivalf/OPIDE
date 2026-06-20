@@ -5,16 +5,8 @@
  * Dependências: Monaco VSCode API
  */
 
-import { getActiveService } from '@codingame/monaco-vscode-api'
-import type { IExplorerService } from '@codingame/monaco-vscode-explorer-service-override'
-
-interface EduSidebarProps {
-  containerElement: HTMLElement
-}
-
 export class EduSidebar {
   private container: HTMLElement
-  private explorerService: IExplorerService | null = null
   private isVisible: boolean = true
 
   constructor(containerElement: HTMLElement) {
@@ -22,13 +14,7 @@ export class EduSidebar {
   }
 
   async initialize(): Promise<void> {
-    try {
-      // Tentar obter o serviço de explorer
-      this.explorerService = await getActiveService<IExplorerService>('explorerService')
-      console.log('[EduSidebar] Explorer service initialized')
-    } catch (error) {
-      console.warn('[EduSidebar] Explorer service not available:', error)
-    }
+    console.log('[EduSidebar] Initialized')
   }
 
   show(): void {

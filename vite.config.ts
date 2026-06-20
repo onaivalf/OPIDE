@@ -112,14 +112,7 @@ export default defineConfig({
         },
       },
     },
-    // FASE-00: Split chunks para melhor cache
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false, // Manter logs em dev
-        drop_debugger: true,
-      },
-    },
+    minify: false,
   },
   optimizeDeps: {
     // FASE-00: Excluir TODOS @codingame do pre-bundling — eles usam dynamic imports
