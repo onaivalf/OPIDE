@@ -6,7 +6,11 @@ void coreFileIsolateEntry(SendPort mainSendPort) {
   final receivePort = ReceivePort();
   
   // Envia a SendPort do CoreIsolate de volta para a UI (Handshake)
-  mainSendPort.send(receivePort.sendPort);
+  mainSendPort.send({
+    'type': 'handshake',
+    'port': receivePort.sendPort,
+    'name': 'core',
+  });
 
   receivePort.listen((message) async {
     if (message is Map<String, dynamic>) {

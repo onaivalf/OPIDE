@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'core/isolates/isolate_manager.dart';
 
@@ -43,6 +44,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _isolateStatus = 'Aguardando teste...';
   bool _testing = false;
+  StreamSubscription? _aiSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    // Escuta eventos vindos do AI Isolate em tempo real
+    _aiSubscription = IsolateManager().aiEventStream.listen((event) {
+      if (event['type'] == 'token') {
+        setState(() {
+          _isolateStatus += event['token'] as String;
+        });
+      }
+    });
+  }
 
   Future<void> _runPingTest() async {
     setState(() {
@@ -58,6 +73,25 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       setState(() {
         _isolateStatus = 'Erro ao se comunicar: $e';
+      });
+    } finally {
+      setState(() {
+        _testing = false;
+      });
+    }
+  }
+
+  Future<void> _runAiStreamTest() async {
+    setState(() {
+      _testing = true;
+      _isolateStatus = 'AI Streaming: ';
+    });
+
+    try {
+      await IsolateManager().sendAiRequest('generate', 'Esta é uma stream de tokens vinda do isolate de IA em tempo real.');
+    } catch (e) {
+      setState(() {
+        _isolateStatus = 'Erro na IA: $e';
       });
     } finally {
       setState(() {
@@ -100,24 +134,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              ElevatedButton.icon(
-                onPressed: _testing ? null : _runPingTest,
-                icon: _testing
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.send),
-                label: const Text('Enviar Ping (Isolate Test)'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _testing ? null : _runPingTest,
+                    icon: const Icon(Icons.send),
+                    label: const Text('Enviar Ping (Core Isolate)'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _testing ? null : _runAiStreamTest,
+                    icon: const Icon(Icons.psychology),
+                    label: const Text('Stream Tokens (AI Isolate)'),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _aiSubscription?.cancel();
+    super.dispose();
   }
 }
